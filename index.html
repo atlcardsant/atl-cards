@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATL Cards — Premium Card Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96B;
+    --gold-dim: #7a6230;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --card-bg: #161616;
+    --border: rgba(201,168,76,0.2);
+    --text: #E8E4DC;
+    --muted: #7a7570;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
+  }
+  body:hover .cursor { opacity:1; }
+
+  /* Grain overlay */
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 10px 24px;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    letter-spacing: 2px !important;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 60px 80px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+  .hero-title .accent { color: var(--gold); }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px rgba(201,168,76,0.4);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 36px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 16px 36px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-cards-float {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .float-card {
+    width: 160px;
+    height: 224px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    position: relative;
+    overflow: hidden;
+    animation: float 6s ease-in-out infinite;
+  }
+  .float-card:nth-child(2) { animation-delay: -2s; margin-top: -40px; }
+  .float-card:nth-child(3) { animation-delay: -4s; margin-top: 20px; }
+
+  .float-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), transparent 50%, rgba(201,168,76,0.05));
+  }
+
+  .float-card-inner {
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-badge {
+    background: var(--gold);
+    color: var(--black);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 8px;
+    display: inline-block;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  .card-player {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+
+  .card-team {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .card-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 80%;
+    height: 180%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+    animation: shine 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); }
+    50% { transform: translateY(-16px) rotate(1deg); }
+  }
+  @keyframes shine {
+    0%, 100% { transform: translateX(-100%) rotate(15deg); }
+    50% { transform: translateX(300%) rotate(15deg); }
+  }
+
+  /* TICKER */
+  .ticker {
+    background: var(--gold);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    animation: ticker 30s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: var(--black);
+    padding: 0 40px;
+  }
+  .ticker-sep { color: rgba(0,0,0,0.3); }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section { padding: 120px 60px; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 5vw, 72px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 60px;
+  }
+
+  /* FEATURED LISTINGS */
+  .listings { background: var(--dark); }
+
+  .listings-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 60px;
+  }
+  .listings-header .section-title { margin-bottom: 0; }
+
+  .view-all {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .view-all:hover { border-color: var(--gold); }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .listing-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    display: block;
+    position: relative;
+  }
+  .listing-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold-dim);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.1);
+  }
+
+  .listing-card-img {
+    height: 200px;
+    background: linear-gradient(135deg, #1a1a1a, #222);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-visual {
+    width: 120px;
+    height: 168px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+
+  .card-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), transparent 60%);
+  }
+
+  .card-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(201,168,76,0.15);
+    position: absolute;
+    bottom: -5px;
+    right: 5px;
+  }
+
+  .card-pos {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    z-index: 1;
+  }
+
+  .card-name-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--text);
+    letter-spacing: 1px;
+    text-align: center;
+    z-index: 1;
+    padding: 0 10px;
+    line-height: 1.1;
+  }
+
+  .hot-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #e63946;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+  }
+
+  .grade-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .listing-info {
+    padding: 20px;
+  }
+
+  .listing-sport {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .listing-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .listing-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .listing-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .listing-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .listing-btn {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .listing-btn:hover { background: var(--gold-light); }
+
+  /* CATEGORIES */
+  .categories { background: var(--black); }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .cat-item {
+    position: relative;
+    height: 200px;
+    background: var(--card-bg);
+    display: flex;
+    align-items: flex-end;
+    padding: 24px;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .cat-item:hover { transform: scale(0.98); }
+  .cat-item:hover .cat-bg { opacity: 0.15; }
+
+  .cat-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cat-icon {
+    font-size: 100px;
+    line-height: 1;
+    filter: grayscale(1);
+  }
+
+  .cat-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--text);
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    transition: color 0.2s;
+  }
+  .cat-item:hover .cat-name { color: var(--gold); }
+
+  .cat-count {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    margin-left: 8px;
+    margin-bottom: 4px;
+  }
+
+  .cat-item:first-child { grid-row: span 2; height: auto; min-height: 402px; }
+
+  /* WHY ATL */
+  .why { background: var(--dark); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .why-text .section-title { margin-bottom: 24px; }
+
+  .why-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .why-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .why-visual {
+    position: relative;
+    height: 500px;
+  }
+
+  .why-card-stack {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stack-card {
+    position: absolute;
+    width: 200px;
+    height: 280px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .stack-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), transparent 60%);
+  }
+
+  .stack-card:nth-child(1) { transform: rotate(-8deg) translate(-60px, 20px); opacity: 0.4; }
+  .stack-card:nth-child(2) { transform: rotate(-3deg) translate(-20px, 10px); opacity: 0.7; z-index: 2; }
+  .stack-card:nth-child(3) { transform: rotate(2deg); z-index: 3; }
+
+  .stack-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(201,168,76,0.1);
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+  }
+
+  .stack-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--text);
+    letter-spacing: 2px;
+    text-align: center;
+    z-index: 1;
+    padding: 0 20px;
+    line-height: 1.1;
+  }
+
+  .stack-card-sport {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    z-index: 1;
+    margin-top: 8px;
+  }
+
+  /* SIGNUP */
+  .signup {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .signup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .signup-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .signup .section-label { justify-content: center; }
+  .signup .section-label::after { display: none; }
+  .signup .section-label::before {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+
+  .signup .section-title { margin-bottom: 16px; }
+
+  .signup-sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 48px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    text-align: left;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--gold-dim); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .form-select {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    cursor: pointer;
+  }
+  .form-select:focus { border-color: var(--gold-dim); }
+  .form-select option { background: var(--card-bg); }
+
+  .form-full { grid-column: span 2; }
+
+  .checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+    margin-bottom: 32px;
+    margin-top: 8px;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    accent-color: var(--gold);
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox-label {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .form-submit {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .form-submit:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .success-msg {
+    display: none;
+    padding: 20px;
+    border: 1px solid var(--gold-dim);
+    background: rgba(201,168,76,0.05);
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 20px;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--dark); }
+
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .test-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+  }
+
+  .test-card::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    color: rgba(201,168,76,0.1);
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    line-height: 1;
+  }
+
+  .test-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 24px;
+    font-weight: 300;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .test-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .test-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--black);
+  }
+
+  .test-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .test-location {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .stars {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 60px 60px 40px;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand .nav-logo {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .footer-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .social-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .footer-col-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .footer-ebay {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .footer-ebay:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+  }
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+  .delay-3 { animation-delay: 0.6s; }
+  .delay-4 { animation-delay: 0.8s; }
+
+  @media (max-width: 1100px) {
+    .hero-cards-float { display: none; }
+    .why-grid { grid-template-columns: 1fr; }
+    .why-visual { display: none; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .cat-item:first-child { grid-row: span 1; min-height: 200px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-full { grid-column: span 1; }
+    .test-grid { grid-template-columns: 1fr; }
+    footer { padding: 40px 24px; }
+    .footer-top { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">ATL<span>CARDS</span></a>
+  <ul class="nav-links">
+    <li><a href="#listings">Shop</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#signup" class="nav-cta">Join the List</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow fade-up">Atlanta's Premier Card Source</div>
+    <h1 class="hero-title fade-up delay-1">
+      THE <span class="accent">GOLD</span><br>
+      <span class="outline">STANDARD</span><br>
+      IN CARDS
+    </h1>
+    <p class="hero-sub fade-up delay-2">Rare pulls, graded slabs, and raw beauties — sourced and sold from the heart of Atlanta. Every card tells a story.</p>
+    <div class="hero-btns fade-up delay-3">
+      <a href="https://www.ebay.com" target="_blank" class="btn-primary">Shop on eBay</a>
+      <a href="#listings" class="btn-outline">View Listings</a>
+    </div>
+  </div>
+
+  <div class="hero-cards-float">
+    <div class="float-card">
+      <div class="card-shine"></div>
+      <div class="float-card-inner">
+        <span class="card-badge">PSA 10</span>
+        <div>
+          <div class="card-player">LeBron James</div>
+          <div class="card-team">Lakers</div>
+        </div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="card-shine"></div>
+      <div class="float-card-inner">
+        <span class="card-badge">BGS 9.5</span>
+        <div>
+          <div class="card-player">Patrick Mahomes</div>
+          <div class="card-team">Chiefs</div>
+        </div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="card-shine"></div>
+      <div class="float-card-inner">
+        <span class="card-badge">RC AUTO</span>
+        <div>
+          <div class="card-player">Wander Franco</div>
+          <div class="card-team">Rays</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">PSA GRADED <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">ROOKIE CARDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AUTOGRAPHS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">BASKETBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FOOTBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">BASEBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">SOCCER <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">ATL CARDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">PSA GRADED <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">ROOKIE CARDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">AUTOGRAPHS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">BASKETBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FOOTBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">BASEBALL <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">SOCCER <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">ATL CARDS <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- FEATURED LISTINGS -->
+<section class="listings" id="listings">
+  <div class="listings-header">
+    <div>
+      <div class="section-label">Featured Listings</div>
+      <h2 class="section-title">WHAT'S<br>IN THE CASE</h2>
+    </div>
+    <a href="https://www.ebay.com" target="_blank" class="view-all">View All on eBay →</a>
+  </div>
+
+  <div class="cards-grid">
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">PG</div>
+          <div class="card-name-big">Steph Curry</div>
+          <div class="card-number">30</div>
+        </div>
+        <div class="grade-badge">10</div>
+        <div class="hot-badge">🔥 Hot</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Basketball</div>
+        <div class="listing-name">Stephen Curry</div>
+        <div class="listing-meta">2015-16 Prizm · PSA 10 · #73</div>
+        <div class="listing-footer">
+          <span class="listing-price">$340</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">QB</div>
+          <div class="card-name-big">Patrick Mahomes</div>
+          <div class="card-number">15</div>
+        </div>
+        <div class="grade-badge">9</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Football</div>
+        <div class="listing-name">Patrick Mahomes</div>
+        <div class="listing-meta">2017 Panini Prizm RC · BGS 9 · #269</div>
+        <div class="listing-footer">
+          <span class="listing-price">$285</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">OF</div>
+          <div class="card-name-big">Ronald Acuña Jr.</div>
+          <div class="card-number">13</div>
+        </div>
+        <div class="hot-badge">LOCAL FAV</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Baseball</div>
+        <div class="listing-name">Ronald Acuña Jr.</div>
+        <div class="listing-meta">2018 Topps Chrome RC Auto · Raw NM</div>
+        <div class="listing-footer">
+          <span class="listing-price">$210</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">SF</div>
+          <div class="card-name-big">Jayson Tatum</div>
+          <div class="card-number">0</div>
+        </div>
+        <div class="grade-badge">10</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Basketball</div>
+        <div class="listing-name">Jayson Tatum</div>
+        <div class="listing-meta">2017 Select Prizm RC · PSA 10</div>
+        <div class="listing-footer">
+          <span class="listing-price">$195</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">WR</div>
+          <div class="card-name-big">Justin Jefferson</div>
+          <div class="card-number">18</div>
+        </div>
+        <div class="hot-badge">🔥 Hot</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Football</div>
+        <div class="listing-name">Justin Jefferson</div>
+        <div class="listing-meta">2020 Panini Prizm RC Silver · Raw</div>
+        <div class="listing-footer">
+          <span class="listing-price">$120</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://www.ebay.com" target="_blank" class="listing-card">
+      <div class="listing-card-img">
+        <div class="card-visual">
+          <div class="card-pos">SS</div>
+          <div class="card-name-big">Wander Franco</div>
+          <div class="card-number">5</div>
+        </div>
+        <div class="grade-badge">9</div>
+      </div>
+      <div class="listing-info">
+        <div class="listing-sport">Baseball</div>
+        <div class="listing-name">Wander Franco</div>
+        <div class="listing-meta">2021 Topps Chrome RC · PSA 9</div>
+        <div class="listing-footer">
+          <span class="listing-price">$89</span>
+          <span class="listing-btn">Buy Now</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories" id="categories">
+  <div class="section-label">Browse By Sport</div>
+  <h2 class="section-title">FIND YOUR<br>SPORT</h2>
+
+  <div class="cat-grid">
+    <a href="https://www.ebay.com" target="_blank" class="cat-item">
+      <div class="cat-bg"><div class="cat-icon">🏀</div></div>
+      <div style="position:relative;z-index:1;">
+        <span class="cat-name">Basketball</span>
+        <div class="cat-count">Most Popular</div>
+      </div>
+    </a>
+    <a href="https://www.ebay.com" target="_blank" class="cat-item">
+      <div class="cat-bg"><div class="cat-icon">🏈</div></div>
+      <div style="position:relative;z-index:1;display:flex;align-items:flex-end;gap:8px;">
+        <span class="cat-name">Football</span>
+      </div>
+    </a>
+    <a href="https://www.ebay.com" target="_blank" class="cat-item">
+      <div class="cat-bg"><div class="cat-icon">⚾</div></div>
+      <span class="cat-name">Baseball</span>
+    </a>
+    <a href="https://www.ebay.com" target="_blank" class="cat-item">
+      <div class="cat-bg"><div class="cat-icon">⚽</div></div>
+      <span class="cat-name">Soccer</span>
+    </a>
+    <a href="https://www.ebay.com" target="_blank" class="cat-item">
+      <div class="cat-bg"><div class="cat-icon">🏒</div></div>
+      <span class="cat-name">Hockey</span>
+    </a>
+  </div>
+</section>
+
+<!-- WHY ATL -->
+<section class="why" id="about">
+  <div class="why-grid">
+    <div class="why-text">
+      <div class="section-label">Why ATL Cards</div>
+      <h2 class="section-title">STRAIGHT FROM<br>THE <span style="color:var(--gold)">ATL</span></h2>
+      <p>We're not a warehouse. We're collectors, just like you. Every card listed has been personally handled, inspected, and priced fairly. No bots, no bulk listings — just passion for the hobby from the heart of Atlanta.</p>
+      <div class="why-stats">
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Cards Sold</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Positive Feedback</div>
+        </div>
+        <div>
+          <div class="stat-num">24hr</div>
+          <div class="stat-label">Avg Ship Time</div>
+        </div>
+        <div>
+          <div class="stat-num">5★</div>
+          <div class="stat-label">eBay Rating</div>
+        </div>
+      </div>
+      <a href="https://www.ebay.com" target="_blank" class="btn-primary">Shop Our eBay Store</a>
+    </div>
+
+    <div class="why-visual">
+      <div class="why-card-stack">
+        <div class="stack-card">
+          <div class="stack-card-num">23</div>
+          <div class="stack-card-name">Michael Jordan</div>
+          <div class="stack-card-sport">Basketball</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-card-num">7</div>
+          <div class="stack-card-name">Cristiano Ronaldo</div>
+          <div class="stack-card-sport">Soccer</div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-card-num">34</div>
+          <div class="stack-card-name">Bo Jackson</div>
+          <div class="stack-card-sport">Baseball · Football</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-label">Reviews</div>
+  <h2 class="section-title">WHAT COLLECTORS<br>ARE SAYING</h2>
+
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <p class="test-text">Card arrived even better than described. The packaging was immaculate and it shipped same day. ATL Cards is my go-to shop now.</p>
+      <div class="test-author">
+        <div class="test-avatar">MJ</div>
+        <div>
+          <div class="test-name">Marcus J.</div>
+          <div class="test-location">Atlanta, GA</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <p class="test-text">Bought a graded Mahomes RC and it was exactly as pictured. Seller answered all my questions before I bought. Highly recommend.</p>
+      <div class="test-author">
+        <div class="test-avatar">TW</div>
+        <div>
+          <div class="test-name">Tyler W.</div>
+          <div class="test-location">Charlotte, NC</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <p class="test-text">Got a gem mint Acuña auto — my grail card. Fair price, fast shipping, great communication. Will definitely be back for more.</p>
+      <div class="test-author">
+        <div class="test-avatar">DL</div>
+        <div>
+          <div class="test-name">David L.</div>
+          <div class="test-location">Miami, FL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section class="signup" id="signup">
+  <div class="signup-inner">
+    <div class="section-label">Stay Connected</div>
+    <h2 class="section-title">JOIN THE<br><span style="color:var(--gold)">INNER CIRCLE</span></h2>
+    <p class="signup-sub">Be first to know about new listings, rare pulls, and exclusive deals before they hit eBay. Collectors who sign up get early access.</p>
+
+    <div id="signupForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="Marcus" id="firstName">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Johnson" id="lastName">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group form-full">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="you@email.com" id="email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Favorite Sport</label>
+          <select class="form-select" id="sport">
+            <option value="" disabled selected>Select a sport</option>
+            <option>Basketball</option>
+            <option>Football</option>
+            <option>Baseball</option>
+            <option>Soccer</option>
+            <option>Hockey</option>
+            <option>All of the above</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget Range</label>
+          <select class="form-select" id="budget">
+            <option value="" disabled selected>Select range</option>
+            <option>Under $50</option>
+            <option>$50 – $150</option>
+            <option>$150 – $500</option>
+            <option>$500+</option>
+          </select>
+        </div>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="agree" checked>
+        <label class="checkbox-label" for="agree">I'd like to receive notifications about new listings, flash sales, and exclusive drops from ATL Cards. No spam, ever.</label>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Join the Inner Circle</button>
+      <div class="success-msg" id="successMsg">
+        ✦ &nbsp; You're in! We'll notify you when something special drops.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">ATL<span>CARDS</span></a>
+      <p class="footer-desc">Premium sports card buying and selling from Atlanta, Georgia. Graded slabs, raw rookies, autos and more — all listed on eBay.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">ig</a>
+        <a href="#" class="social-btn">fb</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Shop</div>
+      <ul class="footer-links">
+        <li><a href="https://www.ebay.com" target="_blank">All Listings</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Basketball Cards</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Football Cards</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Baseball Cards</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Graded Cards</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Rookie Cards</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Info</div>
+      <ul class="footer-links">
+        <li><a href="#about">About ATL Cards</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#signup">Newsletter</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">eBay Store</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="mailto:atlcards@email.com">atlcards@email.com</a></li>
+        <li><a href="#">Atlanta, Georgia</a></li>
+        <li><a href="https://www.ebay.com" target="_blank">Message on eBay</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 ATL Cards. All rights reserved. All purchases made via eBay.</p>
+    <a href="https://www.ebay.com" target="_blank" class="footer-ebay">
+      Shop on eBay →
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let ringX = 0, ringY = 0;
+  let mouseX = 0, mouseY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      ring.style.width = '52px';
+      ring.style.height = '52px';
+      ring.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+
+  // Form submit
+  function submitForm() {
+    const first = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!first || !email) {
+      alert('Please fill in your name and email to join.');
+      return;
+    }
+    document.getElementById('signupForm').style.opacity = '0.3';
+    document.getElementById('signupForm').style.pointerEvents = 'none';
+    const msg = document.getElementById('successMsg');
+    msg.style.display = 'block';
+  }
+
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.listing-card, .cat-item, .test-card, .stat-num').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
