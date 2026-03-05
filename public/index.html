@@ -43,12 +43,15 @@
   .btn-wout{background:transparent;color:var(--white);padding:15px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:inline-block;border:2px solid rgba(255,255,255,.3);transition:border-color .2s,transform .15s;}
   .btn-wout:hover{border-color:var(--white);transform:translateY(-2px);}
   .hero-right{background:var(--off);display:flex;align-items:center;justify-content:center;padding:80px 60px;}
-  .hero-card-display{position:relative;width:320px;height:420px;}
-  .hcard{position:absolute;width:200px;height:280px;border-radius:10px;background:var(--white);box-shadow:0 20px 60px rgba(0,0,0,.15);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-  .hcard:nth-child(1){top:0;left:0;transform:rotate(-6deg);z-index:1;}
-  .hcard:nth-child(2){top:40px;left:50px;transform:rotate(-2deg);z-index:2;}
-  .hcard:nth-child(3){top:80px;left:100px;transform:rotate(3deg);z-index:3;transition:transform .3s;}
-  .hcard:nth-child(3):hover{transform:rotate(0deg) scale(1.05);z-index:10;}
+  .hero-card-display{position:relative;width:260px;}
+  .hcard{width:260px;border-radius:10px;background:var(--white);box-shadow:0 20px 60px rgba(0,0,0,.15);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .3s;}
+  .hcard:hover{transform:translateY(-4px);}
+  .hero-carousel-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
+  .hero-nav-btn{background:var(--black);color:var(--white);border:none;width:38px;height:38px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
+  .hero-nav-btn:hover{background:var(--red);}
+  .hero-nav-dots{display:flex;gap:8px;}
+  .hero-nav-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s;}
+  .hero-nav-dot.active{background:var(--red);}
   .hcard-top{background:var(--black);height:55%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
   .hcard-top::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(215,35,35,.3),transparent);}
   .hcard-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:72px;color:rgba(255,255,255,.07);position:absolute;bottom:-10px;right:5px;line-height:1;}
@@ -389,10 +392,13 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-card-display" id="hero-card-display">
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
+    <div>
+      <div class="hero-card-display" id="hero-card-display"></div>
+      <div class="hero-carousel-nav">
+        <button class="hero-nav-btn" onclick="heroCarousel(-1)">←</button>
+        <div class="hero-nav-dots" id="hero-nav-dots"></div>
+        <button class="hero-nav-btn" onclick="heroCarousel(1)">→</button>
+      </div>
     </div>
   </div>
 </div>
@@ -878,35 +884,55 @@ function clearImage() {
 }
 
 // ===================== HERO CARDS =====================
+let heroCards = [], heroIndex = 0;
+
 async function loadHeroCards() {
   try {
     const cards = await api('GET', '/api/cards');
-    const top3 = cards
+    heroCards = cards
       .sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
       .slice(0, 3);
+    renderHeroCard();
+  } catch(e) {}
+}
 
-    const display = document.getElementById('hero-card-display');
-    if (!top3.length) { display.innerHTML = ''; return; }
+function renderHeroCard() {
+  const display = document.getElementById('hero-card-display');
+  const dots = document.getElementById('hero-nav-dots');
+  if (!heroCards.length || !display) return;
 
-    display.innerHTML = top3.map((c, i) => `
-      <a href="${c.link}" target="_blank" class="hcard" style="text-decoration:none;">
-        <div class="hcard-top">
-          ${c.image
-            ? `<img src="${c.image}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
-            : `<div class="hcard-pos">${c.sport.toUpperCase()}</div><div class="hcard-num">${initials(c.name)}</div>`
-          }
+  const c = heroCards[heroIndex];
+  display.innerHTML = `
+    <a href="${c.link}" target="_blank" class="hcard" style="text-decoration:none;">
+      <div class="hcard-top" style="height:280px;">
+        ${c.image
+          ? `<img src="${c.image}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+          : `<div class="hcard-pos">${c.sport.toUpperCase()}</div><div class="hcard-num">${initials(c.name)}</div>`
+        }
+      </div>
+      <div class="hcard-bot">
+        <div>
+          ${c.grade ? `<div class="hcard-grade">${c.grade}</div>` : ''}
+          <div class="hcard-name">${c.name}</div>
+          <div class="hcard-detail">${c.meta}</div>
         </div>
-        <div class="hcard-bot">
-          <div>
-            ${c.grade ? `<div class="hcard-grade">${c.grade}</div>` : ''}
-            <div class="hcard-name">${c.name}</div>
-            <div class="hcard-detail">${c.meta}</div>
-          </div>
-          <div class="hcard-price">$${c.price}</div>
-        </div>
-      </a>
-    `).join('');
-  } catch(e) { /* silently fail, hero just keeps placeholders */ }
+        <div class="hcard-price">$${c.price}</div>
+      </div>
+    </a>`;
+
+  dots.innerHTML = heroCards.map((_, i) =>
+    `<div class="hero-nav-dot ${i === heroIndex ? 'active' : ''}" onclick="heroGoTo(${i})"></div>`
+  ).join('');
+}
+
+function heroCarousel(dir) {
+  heroIndex = (heroIndex + dir + heroCards.length) % heroCards.length;
+  renderHeroCard();
+}
+
+function heroGoTo(i) {
+  heroIndex = i;
+  renderHeroCard();
 }
 
 // ===================== STATUS HELPERS =====================
