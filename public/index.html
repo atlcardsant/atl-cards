@@ -223,13 +223,13 @@
   .atab-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border);}
 
   .admin-card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;max-height:360px;overflow-y:auto;}
-  .acr{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);padding:12px 16px;flex-wrap:wrap;}
+  .acr{display:flex;flex-direction:column;gap:8px;background:var(--off);border:1px solid var(--border);padding:12px 16px;}
   .acr-info{flex:1;min-width:0;}
   .acr-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .acr-meta{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .acr-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:var(--red);flex-shrink:0;}
-  .acr-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;width:100%;margin-top:6px;}
-  @media(min-width:600px){.acr-actions{width:auto;margin-top:0;}}
+  .acr-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .acr-top{display:flex;align-items:center;gap:8px;}
   .acr-info{flex:1;min-width:0;}
   .acr-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--black);}
   .acr-meta{font-size:12px;color:var(--muted);}
@@ -722,11 +722,13 @@ async function loadAdminListings() {
     }
     list.innerHTML = cards.map(c => `
       <div class="acr">
-        <div class="acr-info">
-          <div class="acr-name">${c.name} ${c.sold ? '<span style="background:var(--red);color:#fff;font-size:10px;padding:2px 7px;letter-spacing:1px;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;margin-left:6px;">SOLD</span>' : ''}</div>
-          <div class="acr-meta">${c.sport} · ${c.meta}</div>
+        <div class="acr-top">
+          <div class="acr-info">
+            <div class="acr-name">${c.name} ${c.sold ? '<span style="background:var(--red);color:#fff;font-size:10px;padding:2px 7px;letter-spacing:1px;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;margin-left:6px;">SOLD</span>' : ''}</div>
+            <div class="acr-meta">${c.sport} · ${c.meta}</div>
+          </div>
+          <div class="acr-price">$${c.price}</div>
         </div>
-        <div class="acr-price">$${c.price}</div>
         <div class="acr-actions">
           <button class="aebtn" onclick="toggleSold('${c.id}', ${!!c.sold})">${c.sold ? 'Unmark Sold' : 'Mark Sold'}</button>
           <button class="aebtn" onclick="editCard('${c.id}')">Edit</button>
