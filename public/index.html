@@ -309,7 +309,20 @@
           <div class="agroup"><label class="alabel">Grade (optional)</label><input type="text" class="ainput" id="f-grade" placeholder="e.g. 10 or 9.5"></div>
           <div class="agroup"><label class="alabel">Hot Badge (optional)</label><input type="text" class="ainput" id="f-badge" placeholder="e.g. 🔥 Hot  or  Auto"></div>
           <div class="agroup afull"><label class="alabel">eBay Listing URL *</label><input type="url" class="ainput" id="f-link" placeholder="https://www.ebay.com/itm/..."></div>
-          <div class="agroup afull"><label class="alabel">Card Image URL (optional)</label><input type="url" class="ainput" id="f-image" placeholder="Right-click eBay image → Copy image address"></div>
+          <div class="agroup afull">
+            <label class="alabel">Card Image (optional)</label>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+              <label style="background:var(--black);color:var(--white);padding:10px 18px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                📷 Upload Photo
+                <input type="file" id="f-image-upload" accept="image/*" style="display:none;" onchange="handleImageUpload(this)">
+              </label>
+              <input type="url" class="ainput" id="f-image" placeholder="…or paste image URL" style="margin:0;flex:1;min-width:180px;" oninput="previewImage(this.value)">
+            </div>
+            <div id="img-preview-wrap" style="display:none;margin-top:8px;">
+              <img id="img-preview" style="max-height:120px;max-width:200px;border:2px solid var(--border);object-fit:contain;display:block;">
+              <button onclick="clearImage()" style="margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;">✕ Remove</button>
+            </div>
+          </div>
         </div>
         <div class="admin-form-btns">
           <button class="asave-btn" id="save-card-btn" onclick="saveCard()">Save Card</button>
@@ -684,11 +697,12 @@ async function loadAdminListings() {
 
 // ===================== ADD / EDIT =====================
 function clearForm() {
-  ['f-name','f-sport','f-meta','f-price','f-grade','f-badge','f-link'].forEach(id => {
+  ['f-name','f-sport','f-meta','f-price','f-grade','f-badge','f-link','f-image'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = '';
   });
   document.getElementById('edit-id').value = '';
   document.getElementById('add-form-title').textContent = 'Add New Card';
+  previewImage('');
   hideStatus('add-status');
 }
 
@@ -705,6 +719,7 @@ async function editCard(id) {
   document.getElementById('f-badge').value = c.badge || '';
   document.getElementById('f-link').value  = c.link || '';
   document.getElementById('f-image').value = c.image || '';
+  previewImage(c.image || '');
   document.getElementById('add-form-title').textContent = 'Edit Card';
   switchTab('add');
 }
@@ -797,6 +812,44 @@ async function changePassword() {
     sessionStorage.removeItem('atl_admin_token');
   } catch(e) { showStatus('pw-status', `Error: ${e.message}`, 'err'); }
   finally { btn.disabled = false; btn.textContent = 'Update Password'; }
+}
+
+// ===================== IMAGE UPLOAD =====================
+function handleImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Compress via canvas
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      document.getElementById('f-image').value = dataUrl;
+      previewImage(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewImage(src) {
+  const wrap = document.getElementById('img-preview-wrap');
+  const prev = document.getElementById('img-preview');
+  if (src) { prev.src = src; wrap.style.display = 'block'; }
+  else { wrap.style.display = 'none'; prev.src = ''; }
+}
+
+function clearImage() {
+  document.getElementById('f-image').value = '';
+  document.getElementById('f-image-upload').value = '';
+  previewImage('');
 }
 
 // ===================== STATUS HELPERS =====================
