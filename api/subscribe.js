@@ -38,11 +38,13 @@ module.exports = async (req, res) => {
       console.log('Kit tag:', tagId, JSON.stringify(tagData));
 
       if (tagId) {
-        await fetch(`https://api.kit.com/v4/tags/${tagId}/subscribers`, {
+        const applyRes = await fetch(`https://api.kit.com/v4/tags/${tagId}/subscribers/${subscriberId}`, {
           method: 'POST',
           headers,
-          body: JSON.stringify({ subscriber_id: subscriberId })
+          body: JSON.stringify({})
         });
+        const applyData = await applyRes.json();
+        console.log('Tag apply status:', applyRes.status, JSON.stringify(applyData));
       }
     }
 
