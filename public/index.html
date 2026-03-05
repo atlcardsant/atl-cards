@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATL Cards — Premium Sports Cards</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;600;700;900&family=Lora:ital@1&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--red:#D72323;--red-dark:#A91A1A;--black:#111111;--black-soft:#1E1E1E;--white:#FFFFFF;--off:#F7F5F2;--lgray:#EFEFEF;--mgray:#AAAAAA;--border:#E0DCDC;--muted:#777777;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--white);color:var(--black);font-family:'Barlow',sans-serif;overflow-x:hidden;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:2px solid var(--black);display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:64px;}
+  .nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;color:var(--black);user-select:none;cursor:pointer;}
+  .nav-logo span{color:var(--red);}
+  .nav-links{display:flex;align-items:center;gap:36px;list-style:none;}
+  .nav-links a{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--black);text-decoration:none;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--red);}
+  .nav-cta{background:var(--red)!important;color:var(--white)!important;padding:10px 22px;}
+  .nav-cta:hover{background:var(--red-dark)!important;}
+
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:64px;overflow:hidden;}
+  .hero-left{background:var(--black);display:flex;flex-direction:column;justify-content:center;padding:80px 60px;position:relative;overflow:hidden;}
+  .hero-left::after{content:'';position:absolute;bottom:0;right:-1px;width:60px;height:100%;background:var(--white);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+  .hero-tag::before{content:'';width:32px;height:2px;background:var(--red);}
+  .hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(64px,8vw,110px);line-height:.92;letter-spacing:-1px;text-transform:uppercase;color:var(--white);margin-bottom:32px;}
+  .hero-title .red{color:var(--red);}
+  .hero-title .outline{-webkit-text-stroke:2px rgba(255,255,255,0.2);color:transparent;}
+  .hero-sub{font-size:16px;line-height:1.7;color:var(--mgray);font-weight:300;max-width:380px;margin-bottom:44px;}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn-red{background:var(--red);color:var(--white);padding:15px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:inline-block;border:2px solid var(--red);transition:background .2s,transform .15s;}
+  .btn-red:hover{background:var(--red-dark);transform:translateY(-2px);}
+  .btn-wout{background:transparent;color:var(--white);padding:15px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:inline-block;border:2px solid rgba(255,255,255,.3);transition:border-color .2s,transform .15s;}
+  .btn-wout:hover{border-color:var(--white);transform:translateY(-2px);}
+  .hero-right{background:var(--off);display:flex;align-items:center;justify-content:center;padding:80px 60px;}
+  .hero-card-display{position:relative;width:320px;height:420px;}
+  .hcard{position:absolute;width:200px;height:280px;border-radius:10px;background:var(--white);box-shadow:0 20px 60px rgba(0,0,0,.15);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+  .hcard:nth-child(1){top:0;left:0;transform:rotate(-6deg);z-index:1;}
+  .hcard:nth-child(2){top:40px;left:50px;transform:rotate(-2deg);z-index:2;}
+  .hcard:nth-child(3){top:80px;left:100px;transform:rotate(3deg);z-index:3;transition:transform .3s;}
+  .hcard:nth-child(3):hover{transform:rotate(0deg) scale(1.05);z-index:10;}
+  .hcard-top{background:var(--black);height:55%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .hcard-top::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(215,35,35,.3),transparent);}
+  .hcard-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:72px;color:rgba(255,255,255,.07);position:absolute;bottom:-10px;right:5px;line-height:1;}
+  .hcard-pos{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:4px;color:var(--red);z-index:1;}
+  .hcard-bot{padding:14px;flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+  .hcard-grade{background:var(--red);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:3px 8px;display:inline-block;margin-bottom:6px;}
+  .hcard-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--black);line-height:1.1;}
+  .hcard-detail{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .hcard-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--red);}
+
+  .ticker{background:var(--red);overflow:hidden;white-space:nowrap;padding:11px 0;border-top:3px solid var(--black);border-bottom:3px solid var(--black);}
+  .ticker-inner{display:inline-flex;animation:ticker 28s linear infinite;}
+  .ticker-item{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--white);padding:0 32px;}
+  .ticker-dot{color:rgba(255,255,255,.35);}
+  @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  section{padding:100px 60px;}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:'';width:28px;height:2px;background:var(--red);}
+  .sec-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(40px,5vw,64px);text-transform:uppercase;letter-spacing:-.5px;line-height:1;color:var(--black);margin-bottom:52px;}
+
+  .listings-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px;}
+  .listings-head .sec-title{margin-bottom:0;}
+  .view-all{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--red);text-decoration:none;border-bottom:2px solid var(--red);padding-bottom:2px;transition:color .2s,border-color .2s;}
+  .view-all:hover{color:var(--red-dark);border-color:var(--red-dark);}
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));border:2px solid var(--black);}
+  .card-item{background:var(--white);text-decoration:none;display:block;border-right:2px solid var(--black);border-bottom:2px solid var(--black);transition:background .2s;position:relative;overflow:hidden;}
+  .card-item:hover{background:var(--off);}
+  .card-item:hover .card-img-inner{transform:scale(1.04);}
+  .card-img{height:190px;background:var(--lgray);overflow:hidden;position:relative;border-bottom:2px solid var(--black);}
+  .card-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .4s ease;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);}
+  .card-mock{width:105px;height:148px;background:var(--white);border:1px solid var(--border);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden;}
+  .card-mock-top{background:var(--black);flex:1;display:flex;align-items:center;justify-content:center;position:relative;}
+  .card-mock-top::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(215,35,35,.35),transparent);}
+  .card-mock-letter{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:36px;color:rgba(255,255,255,.15);z-index:1;}
+  .card-mock-bot{padding:8px;background:var(--white);}
+  .card-mock-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:var(--black);line-height:1.1;}
+  .card-mock-sport{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+  .badge-hot{position:absolute;top:10px;left:10px;background:var(--red);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
+  .badge-grade{position:absolute;top:10px;right:10px;background:var(--black);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:15px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+  .card-info{padding:18px 20px;}
+  .card-sport{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+  .card-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--black);margin-bottom:3px;}
+  .card-meta{font-size:12px;color:var(--muted);margin-bottom:16px;}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:14px;}
+  .card-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:var(--black);}
+  .card-buy{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;background:var(--red);color:var(--white);padding:8px 16px;transition:background .2s;text-decoration:none;display:inline-block;}
+  .card-buy:hover{background:var(--red-dark);}
+  .no-listings{grid-column:1/-1;padding:60px;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:2px;text-transform:uppercase;}
+
+  .cat-wrap{background:var(--off);border-top:3px solid var(--black);border-bottom:3px solid var(--black);}
+  .cat-strip{display:grid;grid-template-columns:repeat(5,1fr);}
+  .cat-block{border-right:2px solid var(--black);padding:48px 32px;text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:12px;transition:background .2s;}
+  .cat-block:last-child{border-right:none;}
+  .cat-block:hover{background:var(--red);}
+  .cat-block:hover .cat-label,.cat-block:hover .cat-arrow{color:var(--white);}
+  .cat-block:hover .cat-emoji{transform:scale(1.3) rotate(-5deg);}
+  .cat-emoji{font-size:36px;transition:transform .3s;display:block;}
+  .cat-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:1px;text-transform:uppercase;color:var(--black);transition:color .2s;}
+  .cat-arrow{font-size:18px;color:var(--muted);opacity:.4;transition:color .2s,opacity .2s;margin-top:auto;}
+  .cat-block:hover .cat-arrow{opacity:1;}
+
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+  .about-left p{font-size:16px;line-height:1.8;color:var(--muted);font-weight:300;margin-bottom:20px;}
+  .about-left p strong{color:var(--black);font-weight:500;}
+  .about-stats{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--black);margin-top:44px;}
+  .about-stat{padding:28px;border-right:2px solid var(--black);border-bottom:2px solid var(--black);}
+  .about-stat:nth-child(even){border-right:none;}
+  .about-stat:nth-child(3),.about-stat:nth-child(4){border-bottom:none;}
+  .stat-big{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;color:var(--red);line-height:1;letter-spacing:-1px;}
+  .stat-desc{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+  .about-right{background:var(--black);padding:48px;position:relative;overflow:hidden;}
+  .about-right::before{content:'ATL';font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:180px;color:rgba(255,255,255,.03);position:absolute;bottom:-20px;right:-10px;line-height:1;letter-spacing:-5px;}
+  .promise-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:36px;color:var(--white);text-transform:uppercase;letter-spacing:1px;margin-bottom:32px;}
+  .promise-title span{color:var(--red);}
+  .promise-list{list-style:none;display:flex;flex-direction:column;gap:20px;}
+  .promise-item{display:flex;align-items:flex-start;gap:16px;color:rgba(255,255,255,.65);font-size:15px;line-height:1.5;font-weight:300;}
+  .promise-icon{width:28px;height:28px;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;margin-top:1px;color:var(--white);}
+
+  .signup{background:var(--off);border-top:3px solid var(--black);border-bottom:3px solid var(--black);}
+  .signup-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start;}
+  .signup-left .sec-title{margin-bottom:16px;}
+  .signup-left p{font-size:16px;line-height:1.7;color:var(--muted);font-weight:300;margin-bottom:32px;}
+  .perks{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .perk{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--black);}
+  .perk::before{content:'✓';width:22px;height:22px;background:var(--red);color:var(--white);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .form-card{background:var(--white);border:2px solid var(--black);padding:40px;}
+  .form-card-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;text-transform:uppercase;letter-spacing:1px;color:var(--black);margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid var(--border);}
+  .fgroup{margin-bottom:18px;}
+  .flabel{display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--black);margin-bottom:8px;}
+  .finput,.fselect{width:100%;border:2px solid var(--border);background:var(--white);color:var(--black);padding:13px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;}
+  .finput:focus,.fselect:focus{border-color:var(--red);}
+  .finput::placeholder{color:var(--mgray);}
+  .frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;}
+  .check-row input[type="checkbox"]{accent-color:var(--red);margin-top:3px;width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .check-row label{font-size:13px;color:var(--muted);line-height:1.5;cursor:pointer;}
+  .fsub{width:100%;background:var(--red);color:var(--white);border:none;padding:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .15s;}
+  .fsub:hover{background:var(--red-dark);transform:translateY(-1px);}
+  .success-msg{display:none;background:var(--black);color:var(--white);padding:16px 20px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;margin-top:16px;text-align:center;}
+  .success-msg span{color:var(--red);}
+
+  .reviews{background:var(--black);}
+  .reviews .eyebrow{color:var(--red);}
+  .reviews .eyebrow::before{background:var(--red);}
+  .reviews .sec-title{color:var(--white);}
+  .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid rgba(255,255,255,.08);}
+  .review-card{background:var(--black-soft);padding:36px;border-right:2px solid rgba(255,255,255,.07);}
+  .review-card:last-child{border-right:none;}
+  .review-stars{color:var(--red);font-size:14px;letter-spacing:3px;margin-bottom:20px;}
+  .review-text{font-style:italic;font-size:15px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:24px;font-family:'Lora',serif;}
+  .review-author{display:flex;align-items:center;gap:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:20px;}
+  .review-av{width:38px;height:38px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:var(--white);flex-shrink:0;}
+  .review-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--white);}
+  .review-loc{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+
+  footer{background:var(--white);border-top:3px solid var(--black);}
+  .footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:60px;padding:60px;border-bottom:2px solid var(--border);}
+  .footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;letter-spacing:3px;text-transform:uppercase;color:var(--black);text-decoration:none;display:inline-block;margin-bottom:16px;}
+  .footer-logo span{color:var(--red);}
+  .footer-desc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:24px;}
+  .footer-social{display:flex;gap:8px;}
+  .soc{width:34px;height:34px;border:2px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--black);text-decoration:none;font-family:'Barlow Condensed',sans-serif;transition:background .2s,color .2s,border-color .2s;}
+  .soc:hover{background:var(--red);border-color:var(--red);color:var(--white);}
+  .fcol-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:var(--black);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--black);}
+  .flinks{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .flinks a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;}
+  .flinks a:hover{color:var(--red);}
+  .footer-bot{display:flex;align-items:center;justify-content:space-between;padding:24px 60px;}
+  .footer-copy{font-size:12px;color:var(--muted);}
+  .ebay-cta{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;background:var(--black);color:var(--white);padding:12px 24px;text-decoration:none;transition:background .2s;}
+  .ebay-cta:hover{background:var(--red);}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* ===== ADMIN ===== */
+  #admin-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(4px);}
+  #admin-overlay.open{display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;}
+  .admin-panel{background:var(--white);width:100%;max-width:880px;border:3px solid var(--black);}
+  .admin-header{background:var(--black);padding:22px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .admin-header-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--white);}
+  .admin-header-title span{color:var(--red);}
+  .admin-close{background:none;border:2px solid rgba(255,255,255,.2);color:var(--white);width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s;}
+  .admin-close:hover{border-color:var(--red);background:var(--red);}
+
+  #admin-login{padding:48px 32px;}
+  .alog-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .alog-sub{font-size:14px;color:var(--muted);margin-bottom:28px;}
+  .alog-row{display:flex;gap:12px;}
+  #admin-pw-input{flex:1;border:2px solid var(--border);padding:14px 18px;font-family:'Barlow',sans-serif;font-size:16px;outline:none;transition:border-color .2s;}
+  #admin-pw-input:focus{border-color:var(--red);}
+  .alog-btn{background:var(--red);color:var(--white);border:none;padding:14px 28px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;white-space:nowrap;}
+  .alog-btn:hover{background:var(--red-dark);}
+  .alog-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .alog-err{display:none;margin-top:12px;color:var(--red);font-size:13px;font-weight:500;}
+  .alog-hint{margin-top:20px;padding:14px 18px;background:var(--off);border:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.6;}
+  .alog-hint strong{color:var(--black);}
+
+  #admin-dashboard{display:none;}
+  .admin-tabs{display:flex;border-bottom:2px solid var(--black);}
+  .admin-tab{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;padding:15px 26px;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s;}
+  .admin-tab.active{color:var(--red);border-bottom-color:var(--red);}
+  .admin-tab:hover:not(.active){color:var(--black);}
+  .admin-tab-content{display:none;padding:32px;}
+  .admin-tab-content.active{display:block;}
+
+  .atab-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border);}
+
+  .admin-card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;max-height:360px;overflow-y:auto;}
+  .acr{display:flex;align-items:center;gap:12px;background:var(--off);border:1px solid var(--border);padding:14px 16px;}
+  .acr-info{flex:1;min-width:0;}
+  .acr-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--black);}
+  .acr-meta{font-size:12px;color:var(--muted);}
+  .acr-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--red);margin-right:6px;flex-shrink:0;}
+  .aebtn{background:var(--black);color:var(--white);border:none;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s;flex-shrink:0;}
+  .aebtn:hover{background:#333;}
+  .adbtn{background:var(--red);color:var(--white);border:none;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s;flex-shrink:0;}
+  .adbtn:hover{background:var(--red-dark);}
+
+  .aform-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .aform-grid .afull{grid-column:span 2;}
+  .agroup{margin-bottom:0;}
+  .alabel{display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--black);margin-bottom:7px;}
+  .ainput,.aselect{width:100%;border:2px solid var(--border);background:var(--white);color:var(--black);padding:12px 15px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;}
+  .ainput:focus,.aselect:focus{border-color:var(--red);}
+  .ainput::placeholder{color:var(--mgray);}
+  .admin-form-btns{display:flex;gap:10px;margin-top:20px;}
+  .asave-btn{background:var(--red);color:var(--white);border:none;padding:14px 28px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+  .asave-btn:hover{background:var(--red-dark);}
+  .asave-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .acancel-btn{background:var(--off);color:var(--black);border:2px solid var(--border);padding:14px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+  .acancel-btn:hover{background:var(--lgray);}
+
+  .astatus{font-size:13px;padding:10px 14px;margin-top:12px;display:none;}
+  .astatus.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+  .astatus.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+  .astatus.loading{background:#fff3cd;color:#856404;border:1px solid #ffc107;}
+
+  .settings-section{margin-bottom:36px;padding-bottom:36px;border-bottom:2px solid var(--border);}
+  .settings-section:last-child{border-bottom:none;}
+  .settings-subtitle{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:1px;margin-bottom:18px;}
+  .sinput{width:100%;max-width:420px;border:2px solid var(--border);background:var(--white);color:var(--black);padding:13px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;display:block;margin-bottom:8px;}
+  .sinput:focus{border-color:var(--red);}
+  .sinput::placeholder{color:var(--mgray);}
+  .shint{font-size:12px;color:var(--muted);margin-bottom:14px;}
+  .ssave-btn{background:var(--black);color:var(--white);border:none;padding:13px 26px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+  .ssave-btn:hover{background:var(--red);}
+  .ssave-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .admin-logout-btn{background:none;border:2px solid var(--border);color:var(--muted);padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;}
+  .admin-logout-btn:hover{border-color:var(--red);color:var(--red);}
+  .admin-empty{padding:28px;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:2px;text-transform:uppercase;border:2px dashed var(--border);}
+
+  @media(max-width:1100px){.hero{grid-template-columns:1fr;min-height:auto;}.hero-right{display:none;}.hero-left::after{display:none;}.about-grid{grid-template-columns:1fr;gap:48px;}.signup-grid{grid-template-columns:1fr;gap:48px;}.cat-strip{grid-template-columns:repeat(3,1fr);}.footer-top{grid-template-columns:1fr 1fr;gap:40px;}}
+  @media(max-width:768px){nav{padding:0 24px;}.nav-links{display:none;}section{padding:64px 24px;}.hero-left{padding:64px 24px;}.hero-title{font-size:68px;}.listings-head{flex-direction:column;align-items:flex-start;gap:16px;}.cards-grid{grid-template-columns:1fr 1fr;}.cat-strip{grid-template-columns:1fr 1fr;}.reviews-grid{grid-template-columns:1fr;}.review-card{border-right:none;border-bottom:2px solid rgba(255,255,255,.07);}.frow2{grid-template-columns:1fr;}.footer-top{grid-template-columns:1fr;padding:40px 24px;}.footer-bot{flex-direction:column;gap:16px;padding:24px;text-align:center;}.aform-grid{grid-template-columns:1fr;}.aform-grid .afull{grid-column:span 1;}.alog-row{flex-direction:column;}.admin-overlay.open{padding:0;}}
+</style>
+</head>
+<body>
+
+<!-- ADMIN OVERLAY -->
+<div id="admin-overlay">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div class="admin-header-title">ATL<span>Cards</span> — Admin</div>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="admin-login">
+      <div class="alog-title">Admin Login</div>
+      <div class="alog-sub">Enter your password to manage listings and settings.</div>
+      <div class="alog-row">
+        <input type="password" id="admin-pw-input" placeholder="Enter password…" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="alog-btn" id="login-btn" onclick="doLogin()">Login</button>
+      </div>
+      <div class="alog-err" id="admin-err"></div>
+      <div class="alog-hint"><strong>Default password:</strong> atlcards2025<br>Change it any time in Settings after logging in.</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="admin-dashboard">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('listings')">📋 Listings</button>
+        <button class="admin-tab" onclick="switchTab('add')">➕ Add Card</button>
+        <button class="admin-tab" onclick="switchTab('settings')">⚙️ Settings</button>
+      </div>
+
+      <!-- LISTINGS -->
+      <div id="tab-listings" class="admin-tab-content active">
+        <div class="atab-title">Your Listings</div>
+        <div id="admin-card-list" class="admin-card-list"><div class="admin-empty">Loading…</div></div>
+        <button class="asave-btn" onclick="switchTab('add');clearForm()">+ Add New Card</button>
+      </div>
+
+      <!-- ADD/EDIT -->
+      <div id="tab-add" class="admin-tab-content">
+        <div class="atab-title" id="add-form-title">Add New Card</div>
+        <input type="hidden" id="edit-id">
+        <div class="aform-grid">
+          <div class="agroup"><label class="alabel">Player Name *</label><input type="text" class="ainput" id="f-name" placeholder="e.g. LeBron James"></div>
+          <div class="agroup"><label class="alabel">Sport *</label>
+            <select class="aselect" id="f-sport"><option value="">Select sport</option><option>Basketball</option><option>Football</option><option>Baseball</option><option>Soccer</option><option>Hockey</option></select>
+          </div>
+          <div class="agroup afull"><label class="alabel">Card Description *</label><input type="text" class="ainput" id="f-meta" placeholder="e.g. 2003 Topps Chrome RC · PSA 10 · #113"></div>
+          <div class="agroup"><label class="alabel">Price (numbers only) *</label><input type="text" class="ainput" id="f-price" placeholder="e.g. 450"></div>
+          <div class="agroup"><label class="alabel">Grade (optional)</label><input type="text" class="ainput" id="f-grade" placeholder="e.g. 10 or 9.5"></div>
+          <div class="agroup"><label class="alabel">Hot Badge (optional)</label><input type="text" class="ainput" id="f-badge" placeholder="e.g. 🔥 Hot  or  Auto"></div>
+          <div class="agroup afull"><label class="alabel">eBay Listing URL *</label><input type="url" class="ainput" id="f-link" placeholder="https://www.ebay.com/itm/..."></div>
+        </div>
+        <div class="admin-form-btns">
+          <button class="asave-btn" id="save-card-btn" onclick="saveCard()">Save Card</button>
+          <button class="acancel-btn" onclick="cancelEdit()">Cancel</button>
+        </div>
+        <div class="astatus" id="add-status"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="tab-settings" class="admin-tab-content">
+        <div class="settings-section">
+          <div class="settings-subtitle">eBay Store URL</div>
+          <input type="url" class="sinput" id="set-ebay" placeholder="https://www.ebay.com/usr/yourusername">
+          <div class="shint">All "Shop on eBay" buttons will use this link.</div>
+          <button class="ssave-btn" id="save-ebay-btn" onclick="saveEbay()">Save eBay Link</button>
+          <div class="astatus" id="ebay-status"></div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-subtitle">Change Password</div>
+          <input type="password" class="sinput" id="set-cur-pw" placeholder="Current password">
+          <input type="password" class="sinput" id="set-new-pw" placeholder="New password (min 6 characters)">
+          <input type="password" class="sinput" id="set-conf-pw" placeholder="Confirm new password">
+          <button class="ssave-btn" id="save-pw-btn" onclick="changePassword()">Update Password</button>
+          <div class="astatus" id="pw-status"></div>
+        </div>
+
+        <div class="settings-section">
+          <button class="admin-logout-btn" onclick="doLogout()">Log Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SITE -->
+<nav>
+  <span class="nav-logo" id="nav-logo" title="Click 5× to open admin">ATL<span>Cards</span></span>
+  <ul class="nav-links">
+    <li><a href="#listings">Shop</a></li>
+    <li><a href="#cats">Sports</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#signup" class="nav-cta">Get Early Access</a></li>
+  </ul>
+</nav>
+
+<div class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-tag">Premium Sports Cards</div>
+    <h1 class="hero-title">BUY<br><span class="red">SELL</span><br><span class="outline">COLLECT</span></h1>
+    <p class="hero-sub">Graded slabs, rookie cards, and rare autos — personally sourced, inspected, and listed. Every card guaranteed authentic.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-red ebay-link" target="_blank">Shop on eBay</a>
+      <a href="#listings" class="btn-wout">View Listings</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card-display">
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">FORWARD</div><div class="hcard-num">23</div></div><div class="hcard-bot"><div><div class="hcard-grade">PSA 10</div><div class="hcard-name">Michael Jordan</div><div class="hcard-detail">1986 Fleer RC · #57</div></div><div class="hcard-price">$4,200</div></div></div>
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">QUARTERBACK</div><div class="hcard-num">15</div></div><div class="hcard-bot"><div><div class="hcard-grade">BGS 9.5</div><div class="hcard-name">P. Mahomes</div><div class="hcard-detail">2017 Prizm RC · #269</div></div><div class="hcard-price">$285</div></div></div>
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">GUARD</div><div class="hcard-num">30</div></div><div class="hcard-bot"><div><div class="hcard-grade">PSA 10</div><div class="hcard-name">Steph Curry</div><div class="hcard-detail">2015 Prizm · #73</div></div><div class="hcard-price">$340</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker"><div class="ticker-inner">
+  <span class="ticker-item">PSA Graded <span class="ticker-dot">◆</span></span><span class="ticker-item">Rookie Cards <span class="ticker-dot">◆</span></span><span class="ticker-item">Autographs <span class="ticker-dot">◆</span></span><span class="ticker-item">Basketball <span class="ticker-dot">◆</span></span><span class="ticker-item">Football <span class="ticker-dot">◆</span></span><span class="ticker-item">Baseball <span class="ticker-dot">◆</span></span><span class="ticker-item">Free Shipping <span class="ticker-dot">◆</span></span><span class="ticker-item">100% Authentic <span class="ticker-dot">◆</span></span>
+  <span class="ticker-item">PSA Graded <span class="ticker-dot">◆</span></span><span class="ticker-item">Rookie Cards <span class="ticker-dot">◆</span></span><span class="ticker-item">Autographs <span class="ticker-dot">◆</span></span><span class="ticker-item">Basketball <span class="ticker-dot">◆</span></span><span class="ticker-item">Football <span class="ticker-dot">◆</span></span><span class="ticker-item">Baseball <span class="ticker-dot">◆</span></span><span class="ticker-item">Free Shipping <span class="ticker-dot">◆</span></span><span class="ticker-item">100% Authentic <span class="ticker-dot">◆</span></span>
+</div></div>
+
+<section id="listings">
+  <div class="listings-head">
+    <div><div class="eyebrow">Featured Listings</div><h2 class="sec-title">What's In<br>The Case</h2></div>
+    <a href="#" class="view-all ebay-link" target="_blank">View All on eBay →</a>
+  </div>
+  <div class="cards-grid" id="cards-grid"><div class="no-listings">Loading listings…</div></div>
+</section>
+
+<div class="cat-wrap" id="cats">
+  <div class="cat-strip">
+    <a href="#" class="cat-block ebay-link" target="_blank"><span class="cat-emoji">🏀</span><span class="cat-label">Basketball</span><span class="cat-arrow">→</span></a>
+    <a href="#" class="cat-block ebay-link" target="_blank"><span class="cat-emoji">🏈</span><span class="cat-label">Football</span><span class="cat-arrow">→</span></a>
+    <a href="#" class="cat-block ebay-link" target="_blank"><span class="cat-emoji">⚾</span><span class="cat-label">Baseball</span><span class="cat-arrow">→</span></a>
+    <a href="#" class="cat-block ebay-link" target="_blank"><span class="cat-emoji">⚽</span><span class="cat-label">Soccer</span><span class="cat-arrow">→</span></a>
+    <a href="#" class="cat-block ebay-link" target="_blank"><span class="cat-emoji">🏒</span><span class="cat-label">Hockey</span><span class="cat-arrow">→</span></a>
+  </div>
+</div>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-left">
+      <div class="eyebrow">About ATL Cards</div>
+      <h2 class="sec-title">Not Just A<br>Seller. A<br>Collector.</h2>
+      <p>We're not a warehouse operation. Every card listed has been <strong>personally sourced, inspected, and priced fairly</strong> by a real collector who cares about the hobby.</p>
+      <p>Whether you're chasing your first PSA 10 or adding a grail to your PC, you'll always get <strong>honest descriptions, careful packaging, and fast shipping</strong>.</p>
+      <a href="#" class="btn-red ebay-link" target="_blank" style="margin-top:8px">Visit Our eBay Store</a>
+      <div class="about-stats">
+        <div class="about-stat"><div class="stat-big">500+</div><div class="stat-desc">Cards Sold</div></div>
+        <div class="about-stat"><div class="stat-big">100%</div><div class="stat-desc">Positive Feedback</div></div>
+        <div class="about-stat"><div class="stat-big">24hr</div><div class="stat-desc">Avg Ship Time</div></div>
+        <div class="about-stat"><div class="stat-big">5★</div><div class="stat-desc">eBay Rating</div></div>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="promise-title">The ATL <span>Promise</span></div>
+      <ul class="promise-list">
+        <li class="promise-item"><span class="promise-icon">✓</span>Every card is exactly as described — no surprises when it arrives.</li>
+        <li class="promise-item"><span class="promise-icon">✓</span>Packed with penny sleeves, top loaders, and team bags. Always.</li>
+        <li class="promise-item"><span class="promise-icon">✓</span>Tracking provided on every single order, no minimum required.</li>
+        <li class="promise-item"><span class="promise-icon">✓</span>Questions before you buy? Message us — we respond fast.</li>
+        <li class="promise-item"><span class="promise-icon">✓</span>If something's wrong, we make it right. Full stop.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="signup" id="signup">
+  <div class="signup-grid">
+    <div class="signup-left">
+      <div class="eyebrow">Newsletter</div>
+      <h2 class="sec-title">First To<br>Know.<br>First To<br>Buy.</h2>
+      <p>New listings go fast. Sign up and get notified before anything hits eBay.</p>
+      <ul class="perks">
+        <li class="perk">Early access to new listings</li>
+        <li class="perk">Flash sale alerts</li>
+        <li class="perk">New graded card drops</li>
+        <li class="perk">No spam, unsubscribe anytime</li>
+      </ul>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">Join the Inner Circle</div>
+      <div class="frow2">
+        <div class="fgroup"><label class="flabel">First Name</label><input type="text" class="finput" placeholder="Marcus" id="fn"></div>
+        <div class="fgroup"><label class="flabel">Last Name</label><input type="text" class="finput" placeholder="Johnson" id="ln"></div>
+      </div>
+      <div class="fgroup"><label class="flabel">Email Address</label><input type="email" class="finput" placeholder="you@email.com" id="em"></div>
+      <div class="frow2">
+        <div class="fgroup"><label class="flabel">Favorite Sport</label><select class="fselect"><option value="" disabled selected>Select sport</option><option>Basketball</option><option>Football</option><option>Baseball</option><option>Soccer</option><option>Hockey</option><option>All Sports</option></select></div>
+        <div class="fgroup"><label class="flabel">Budget Range</label><select class="fselect"><option value="" disabled selected>Select range</option><option>Under $50</option><option>$50–$150</option><option>$150–$500</option><option>$500+</option></select></div>
+      </div>
+      <div class="check-row"><input type="checkbox" id="agree" checked><label for="agree">I'd like to receive new listing alerts and exclusive deals from ATL Cards.</label></div>
+      <button class="fsub" onclick="doSubmit()">Join the List — It's Free</button>
+      <div class="success-msg" id="ok"><span>✓</span> &nbsp; You're in! Watch your inbox for early access drops.</div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="eyebrow">Reviews</div>
+  <h2 class="sec-title">Collectors<br>Don't Lie</h2>
+  <div class="reviews-grid">
+    <div class="review-card reveal"><div class="review-stars">★★★★★</div><p class="review-text">"Card arrived better than described. Packed perfectly — top loader, sleeve, the works. Shipped same day."</p><div class="review-author"><div class="review-av">MJ</div><div><div class="review-name">Marcus J.</div><div class="review-loc">Verified eBay Buyer</div></div></div></div>
+    <div class="review-card reveal"><div class="review-stars">★★★★★</div><p class="review-text">"Bought a graded Mahomes RC. Exactly as pictured, arrived in two days. Seller answered every question fast."</p><div class="review-author"><div class="review-av">TW</div><div><div class="review-name">Tyler W.</div><div class="review-loc">Verified eBay Buyer</div></div></div></div>
+    <div class="review-card reveal"><div class="review-stars">★★★★★</div><p class="review-text">"Got a gem mint Acuña auto — my grail card. Fair price, fast shipping, and honest communication throughout."</p><div class="review-author"><div class="review-av">DL</div><div><div class="review-name">David L.</div><div class="review-loc">Verified eBay Buyer</div></div></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#" class="footer-logo">ATL<span>Cards</span></a>
+      <p class="footer-desc">Premium sports card buying and selling. Graded slabs, raw rookies, autos, and more — all listed on eBay with fast shipping and guaranteed authenticity.</p>
+      <div class="footer-social"><a href="#" class="soc">𝕏</a><a href="#" class="soc">IG</a><a href="#" class="soc">FB</a></div>
+    </div>
+    <div>
+      <div class="fcol-title">Shop</div>
+      <ul class="flinks"><li><a href="#" class="ebay-link" target="_blank">All Listings</a></li><li><a href="#" class="ebay-link" target="_blank">Basketball</a></li><li><a href="#" class="ebay-link" target="_blank">Football</a></li><li><a href="#" class="ebay-link" target="_blank">Baseball</a></li><li><a href="#" class="ebay-link" target="_blank">Graded Cards</a></li></ul>
+    </div>
+    <div>
+      <div class="fcol-title">Info</div>
+      <ul class="flinks"><li><a href="#about">About</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#signup">Newsletter</a></li><li><a href="#" class="ebay-link" target="_blank">eBay Store</a></li></ul>
+    </div>
+    <div>
+      <div class="fcol-title">Contact</div>
+      <ul class="flinks"><li><a href="mailto:hello@atlcards.com">hello@atlcards.com</a></li><li><a href="#" class="ebay-link" target="_blank">Message on eBay</a></li></ul>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <p class="footer-copy">© 2025 ATL Cards. All rights reserved. All purchases completed via eBay.</p>
+    <a href="#" class="ebay-cta ebay-link" target="_blank">Shop on eBay →</a>
+  </div>
+</footer>
+
+<script>
+// ===================== STATE =====================
+let adminToken = sessionStorage.getItem('atl_admin_token') || null;
+
+// ===================== API HELPERS =====================
+async function api(method, endpoint, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  if (adminToken) opts.headers['Authorization'] = `Bearer ${adminToken}`;
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(endpoint, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+// ===================== EBAY LINKS =====================
+async function loadEbayLinks() {
+  try {
+    const { ebayUrl } = await api('GET', '/api/settings');
+    document.querySelectorAll('.ebay-link').forEach(el => el.href = ebayUrl);
+    const inp = document.getElementById('set-ebay');
+    if (inp) inp.value = ebayUrl;
+  } catch(e) { /* silently fail, links just won't update */ }
+}
+
+// ===================== RENDER CARDS =====================
+function initials(name) {
+  return name.split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase();
+}
+
+async function loadCards() {
+  try {
+    const cards = await api('GET', '/api/cards');
+    const grid = document.getElementById('cards-grid');
+    if (!cards.length) {
+      grid.innerHTML = '<div class="no-listings">No listings yet — check back soon!</div>';
+      return;
+    }
+    grid.innerHTML = cards.map(c => `
+      <a href="${c.link}" target="_blank" class="card-item reveal">
+        <div class="card-img">
+          <div class="card-img-inner">
+            <div class="card-mock">
+              <div class="card-mock-top"><div class="card-mock-letter">${initials(c.name)}</div></div>
+              <div class="card-mock-bot"><div class="card-mock-name">${c.name}</div><div class="card-mock-sport">${c.sport}</div></div>
+            </div>
+          </div>
+          ${c.badge ? `<div class="badge-hot">${c.badge}</div>` : ''}
+          ${c.grade ? `<div class="badge-grade">${c.grade}</div>` : ''}
+        </div>
+        <div class="card-info">
+          <div class="card-sport">${c.sport}</div>
+          <div class="card-name">${c.name}</div>
+          <div class="card-meta">${c.meta}</div>
+          <div class="card-footer">
+            <span class="card-price">$${c.price}</span>
+            <span class="card-buy">Buy Now</span>
+          </div>
+        </div>
+      </a>
+    `).join('');
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  } catch(e) {
+    document.getElementById('cards-grid').innerHTML = '<div class="no-listings">Could not load listings.</div>';
+  }
+}
+
+// ===================== SCROLL REVEAL =====================
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ===================== SIGNUP FORM =====================
+function doSubmit() {
+  const first = document.getElementById('fn').value.trim();
+  const email = document.getElementById('em').value.trim();
+  if (!first || !email) { alert('Please enter your name and email.'); return; }
+  document.querySelectorAll('#signup .fgroup,#signup .frow2,#signup .check-row,.fsub,.form-card-title').forEach(el => {
+    el.style.opacity = '.2'; el.style.pointerEvents = 'none';
+  });
+  document.getElementById('ok').style.display = 'block';
+}
+
+// ===================== ADMIN OPEN/CLOSE =====================
+let logoClicks = 0, logoTimer;
+document.getElementById('nav-logo').addEventListener('click', () => {
+  logoClicks++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(() => logoClicks = 0, 1500);
+  if (logoClicks >= 5) { logoClicks = 0; openAdmin(); }
+});
+
+function openAdmin() {
+  document.getElementById('admin-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (adminToken) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    loadAdminListings();
+    loadEbayLinks();
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('admin-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('admin-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('admin-overlay')) closeAdmin();
+});
+
+// ===================== LOGIN =====================
+async function doLogin() {
+  const pw  = document.getElementById('admin-pw-input').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('admin-err');
+  err.style.display = 'none';
+  if (!pw) { showErr(err, 'Please enter your password.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+
+  try {
+    const { token } = await api('POST', '/api/login', { password: pw });
+    adminToken = token;
+    sessionStorage.setItem('atl_admin_token', token);
+    document.getElementById('admin-pw-input').value = '';
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    loadAdminListings();
+    loadEbayLinks();
+  } catch(e) {
+    showErr(err, 'Incorrect password. Try again.');
+    document.getElementById('admin-pw-input').value = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Login';
+  }
+}
+
+function doLogout() {
+  adminToken = null;
+  sessionStorage.removeItem('atl_admin_token');
+  closeAdmin();
+  document.getElementById('admin-login').style.display = 'block';
+  document.getElementById('admin-dashboard').style.display = 'none';
+}
+
+function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+// ===================== TABS =====================
+function switchTab(name) {
+  document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach((t, i) => {
+    t.classList.remove('active');
+    if ((name==='listings'&&i===0)||(name==='add'&&i===1)||(name==='settings'&&i===2)) t.classList.add('active');
+  });
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name === 'listings') loadAdminListings();
+}
+
+// ===================== ADMIN LISTINGS =====================
+async function loadAdminListings() {
+  const list = document.getElementById('admin-card-list');
+  list.innerHTML = '<div class="admin-empty">Loading…</div>';
+  try {
+    const cards = await api('GET', '/api/cards');
+    if (!cards.length) {
+      list.innerHTML = '<div class="admin-empty">No listings yet. Click "Add Card" to get started.</div>';
+      return;
+    }
+    list.innerHTML = cards.map(c => `
+      <div class="acr">
+        <div class="acr-info">
+          <div class="acr-name">${c.name}</div>
+          <div class="acr-meta">${c.sport} · ${c.meta}</div>
+        </div>
+        <div class="acr-price">$${c.price}</div>
+        <button class="aebtn" onclick="editCard('${c.id}')">Edit</button>
+        <button class="adbtn" onclick="deleteCard('${c.id}')">Delete</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="admin-empty">Failed to load listings.</div>';
+  }
+}
+
+// ===================== ADD / EDIT =====================
+function clearForm() {
+  ['f-name','f-sport','f-meta','f-price','f-grade','f-badge','f-link'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('edit-id').value = '';
+  document.getElementById('add-form-title').textContent = 'Add New Card';
+  hideStatus('add-status');
+}
+
+async function editCard(id) {
+  const cards = await api('GET', '/api/cards');
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('f-name').value  = c.name || '';
+  document.getElementById('f-sport').value = c.sport || '';
+  document.getElementById('f-meta').value  = c.meta || '';
+  document.getElementById('f-price').value = c.price || '';
+  document.getElementById('f-grade').value = c.grade || '';
+  document.getElementById('f-badge').value = c.badge || '';
+  document.getElementById('f-link').value  = c.link || '';
+  document.getElementById('add-form-title').textContent = 'Edit Card';
+  switchTab('add');
+}
+
+function cancelEdit() { clearForm(); switchTab('listings'); }
+
+async function saveCard() {
+  const name  = document.getElementById('f-name').value.trim();
+  const sport = document.getElementById('f-sport').value;
+  const meta  = document.getElementById('f-meta').value.trim();
+  const price = document.getElementById('f-price').value.trim();
+  const link  = document.getElementById('f-link').value.trim();
+  const btn   = document.getElementById('save-card-btn');
+  const st    = 'add-status';
+
+  if (!name || !sport || !meta || !price || !link) {
+    showStatus(st, 'Please fill in all required fields (*).', 'err'); return;
+  }
+
+  const card = {
+    name, sport, meta, price,
+    grade: document.getElementById('f-grade').value.trim(),
+    badge: document.getElementById('f-badge').value.trim(),
+    link
+  };
+
+  btn.disabled = true; btn.textContent = 'Saving…';
+  showStatus(st, 'Saving…', 'loading');
+
+  try {
+    const editId = document.getElementById('edit-id').value;
+    if (editId) {
+      await api('PUT', `/api/cards?id=${editId}`, card);
+      showStatus(st, '✓ Card updated!', 'ok');
+    } else {
+      await api('POST', '/api/cards', card);
+      showStatus(st, '✓ Card added!', 'ok');
+    }
+    clearForm();
+    await loadCards();
+    setTimeout(() => { switchTab('listings'); hideStatus(st); }, 1200);
+  } catch(e) {
+    showStatus(st, `Error: ${e.message}`, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save Card';
+  }
+}
+
+async function deleteCard(id) {
+  if (!confirm('Delete this card listing? This cannot be undone.')) return;
+  try {
+    await api('DELETE', `/api/cards?id=${id}`);
+    await loadAdminListings();
+    await loadCards();
+  } catch(e) { alert('Failed to delete card: ' + e.message); }
+}
+
+// ===================== SETTINGS =====================
+async function saveEbay() {
+  const url = document.getElementById('set-ebay').value.trim();
+  const btn = document.getElementById('save-ebay-btn');
+  if (!url) { showStatus('ebay-status', 'Please enter a URL.', 'err'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    await api('POST', '/api/settings', { ebayUrl: url });
+    await loadEbayLinks();
+    showStatus('ebay-status', '✓ eBay link saved!', 'ok');
+  } catch(e) { showStatus('ebay-status', `Error: ${e.message}`, 'err'); }
+  finally { btn.disabled = false; btn.textContent = 'Save eBay Link'; }
+}
+
+async function changePassword() {
+  const cur  = document.getElementById('set-cur-pw').value;
+  const nw   = document.getElementById('set-new-pw').value;
+  const conf = document.getElementById('set-conf-pw').value;
+  const btn  = document.getElementById('save-pw-btn');
+
+  if (!cur || !nw || !conf) { showStatus('pw-status', 'Please fill in all fields.', 'err'); return; }
+  if (nw.length < 6)        { showStatus('pw-status', 'New password must be at least 6 characters.', 'err'); return; }
+  if (nw !== conf)          { showStatus('pw-status', 'New passwords do not match.', 'err'); return; }
+
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    await api('PUT', '/api/login', { currentPassword: cur, newPassword: nw });
+    showStatus('pw-status', '✓ Password updated! You will need to log in again next time.', 'ok');
+    ['set-cur-pw','set-new-pw','set-conf-pw'].forEach(id => document.getElementById(id).value = '');
+    // Clear session so they re-login with new password next time
+    adminToken = null;
+    sessionStorage.removeItem('atl_admin_token');
+  } catch(e) { showStatus('pw-status', `Error: ${e.message}`, 'err'); }
+  finally { btn.disabled = false; btn.textContent = 'Update Password'; }
+}
+
+// ===================== STATUS HELPERS =====================
+function showStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `astatus ${type}`;
+  el.style.display = 'block';
+  if (type === 'ok') setTimeout(() => hideStatus(id), 3500);
+}
+function hideStatus(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+// ===================== INIT =====================
+(async () => {
+  await loadEbayLinks();
+  await loadCards();
+})();
+</script>
+</body>
+</html>
