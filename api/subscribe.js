@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.KIT_API_KEY}`
+        'X-Kit-Api-Key': process.env.KIT_API_KEY
       },
       body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' })
     });
