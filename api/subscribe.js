@@ -8,19 +8,27 @@ module.exports = async (req, res) => {
   const { email, firstName } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
 
-  const response = await fetch('https://api.kit.com/v4/subscribers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Kit-Api-Key': process.env.KIT_API_KEY
-    },
-    body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' })
-  });
+  try {
+    const kitRes = await fetch('https://api.kit.com/v4/subscribers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Kit-Api-Key': process.env.KIT_API_KEY
+      },
+      body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' })
+    });
 
-  if (!response.ok) {
-    const err = await response.json();
-    return res.status(500).json({ error: err.message || 'Kit API error' });
+    const data = await kitRes.json();
+    console.log('Kit status:', kitRes.status);
+    console.log('Kit body:', JSON.stringify(data));
+
+    if (!kitRes.ok) {
+      return res.status(500).json({ error: data.message || data.errors || 'Kit API error', detail: data });
+    }
+
+    return res.json({ success: true });
+  } catch (e) {
+    console.error('Subscribe error:', e);
+    return res.status(500).json({ error: e.message });
   }
-
-  return res.json({ success: true });
 };
