@@ -1,6 +1,11 @@
-const { kv }                    = require('@vercel/kv');
-const crypto                    = require('crypto');
+const { Redis }                  = require('@upstash/redis');
+const crypto                     = require('crypto');
 const { createToken, verifyToken, cors } = require('./_auth');
+
+const kv = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 const DEFAULT_HASH = crypto.createHash('sha256').update('atlcards2025').digest('hex');
 
