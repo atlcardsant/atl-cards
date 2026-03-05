@@ -8,22 +8,42 @@ module.exports = async (req, res) => {
   const { email, firstName } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
 
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Kit-Api-Key': process.env.KIT_API_KEY
+  };
+
   try {
-    const kitRes = await fetch('https://api.kit.com/v4/subscribers', {
+    // Step 1 — create/update subscriber
+    const subRes = await fetch('https://api.kit.com/v4/subscribers', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Kit-Api-Key': process.env.KIT_API_KEY
-      },
+      headers,
       body: JSON.stringify({ email_address: email, first_name: firstName || '', state: 'active' })
     });
+    const subData = await subRes.json();
+    console.log('Kit subscriber status:', subRes.status, JSON.stringify(subData));
+    if (!subRes.ok) return res.status(500).json({ error: subData.errors || 'Failed to create subscriber' });
 
-    const data = await kitRes.json();
-    console.log('Kit status:', kitRes.status);
-    console.log('Kit body:', JSON.stringify(data));
+    const subscriberId = subData.subscriber?.id;
 
-    if (!kitRes.ok) {
-      return res.status(500).json({ error: data.message || data.errors || 'Kit API error', detail: data });
+    // Step 2 — apply tag "website-signup"
+    if (subscriberId) {
+      const tagRes = await fetch('https://api.kit.com/v4/tags', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ name: 'website-signup' })
+      });
+      const tagData = await tagRes.json();
+      const tagId = tagData.tag?.id;
+      console.log('Kit tag:', tagId, JSON.stringify(tagData));
+
+      if (tagId) {
+        await fetch(`https://api.kit.com/v4/tags/${tagId}/subscribers`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ subscriber_id: subscriberId })
+        });
+      }
     }
 
     return res.json({ success: true });
