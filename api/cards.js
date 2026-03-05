@@ -23,13 +23,13 @@ module.exports = async (req, res) => {
 
   // POST — add a new card
   if (req.method === 'POST') {
-    const { name, sport, meta, price, grade, badge, link } = req.body || {};
+    const { name, sport, meta, price, grade, badge, link, image } = req.body || {};
     if (!name || !sport || !meta || !price || !link) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const cards = (await kv.get('cards')) || [];
-    const card  = { id: Date.now().toString(), name, sport, meta, price, grade: grade || '', badge: badge || '', link, createdAt: new Date().toISOString() };
+    const card  = { id: Date.now().toString(), name, sport, meta, price, grade: grade || '', badge: badge || '', link, image: image || '', createdAt: new Date().toISOString() };
     cards.push(card);
     await kv.set('cards', cards);
     return res.status(201).json(card);
