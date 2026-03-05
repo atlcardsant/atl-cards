@@ -928,11 +928,24 @@ function renderHeroCard() {
 function heroCarousel(dir) {
   heroIndex = (heroIndex + dir + heroCards.length) % heroCards.length;
   renderHeroCard();
+  resetHeroAutoplay();
 }
 
 function heroGoTo(i) {
   heroIndex = i;
   renderHeroCard();
+  resetHeroAutoplay();
+}
+
+let heroAutoplay = setInterval(() => {
+  if (heroCards.length) { heroIndex = (heroIndex + 1) % heroCards.length; renderHeroCard(); }
+}, 3000);
+
+function resetHeroAutoplay() {
+  clearInterval(heroAutoplay);
+  heroAutoplay = setInterval(() => {
+    if (heroCards.length) { heroIndex = (heroIndex + 1) % heroCards.length; renderHeroCard(); }
+  }, 3000);
 }
 
 // ===================== STATUS HELPERS =====================
