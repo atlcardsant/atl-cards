@@ -12,6 +12,7 @@
   gtag('js', new Date());
   gtag('config', 'G-3CJNX1TTFG');
 </script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LedSIAsAAAAAEUQQTmUR53JlJpgPRs8jRQP7jif"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;600;700;900&family=Lora:ital@1&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{--red:#D72323;--red-dark:#A91A1A;--black:#111111;--black-soft:#1E1E1E;--white:#FFFFFF;--off:#F7F5F2;--lgray:#EFEFEF;--mgray:#AAAAAA;--border:#E0DCDC;--muted:#777777;}
@@ -610,10 +611,12 @@ async function doSubmit() {
   btn.disabled = true; btn.textContent = 'Subscribing…';
 
   try {
+    const recaptchaToken = await grecaptcha.execute('6LedSIAsAAAAAEUQQTmUR53JlJpgPRs8jRQP7jif', { action: 'subscribe' });
+
     const res = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, firstName: first })
+      body: JSON.stringify({ email, firstName: first, recaptchaToken })
     });
 
     if (!res.ok) throw new Error('Failed');
