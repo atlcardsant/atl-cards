@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATL Cards — Premium Sports Cards</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3CJNX1TTFG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3CJNX1TTFG');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;600;700;900&family=Lora:ital@1&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{--red:#D72323;--red-dark:#A91A1A;--black:#111111;--black-soft:#1E1E1E;--white:#FFFFFF;--off:#F7F5F2;--lgray:#EFEFEF;--mgray:#AAAAAA;--border:#E0DCDC;--muted:#777777;}
@@ -587,14 +595,31 @@ const revealObs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
 // ===================== SIGNUP FORM =====================
-function doSubmit() {
+async function doSubmit() {
   const first = document.getElementById('fn').value.trim();
   const email = document.getElementById('em').value.trim();
   if (!first || !email) { alert('Please enter your name and email.'); return; }
-  document.querySelectorAll('#signup .fgroup,#signup .frow2,#signup .check-row,.fsub,.form-card-title').forEach(el => {
-    el.style.opacity = '.2'; el.style.pointerEvents = 'none';
-  });
-  document.getElementById('ok').style.display = 'block';
+
+  const btn = document.querySelector('.fsub');
+  btn.disabled = true; btn.textContent = 'Subscribing…';
+
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, firstName: first })
+    });
+
+    if (!res.ok) throw new Error('Failed');
+
+    document.querySelectorAll('#signup .fgroup,#signup .frow2,#signup .check-row,.fsub,.form-card-title').forEach(el => {
+      el.style.opacity = '.2'; el.style.pointerEvents = 'none';
+    });
+    document.getElementById('ok').style.display = 'block';
+  } catch(e) {
+    alert('Something went wrong — please try again.');
+    btn.disabled = false; btn.textContent = 'Join the List';
+  }
 }
 
 // ===================== ADMIN OPEN/CLOSE =====================
