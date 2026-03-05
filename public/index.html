@@ -389,10 +389,10 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-card-display">
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">FORWARD</div><div class="hcard-num">23</div></div><div class="hcard-bot"><div><div class="hcard-grade">PSA 10</div><div class="hcard-name">Michael Jordan</div><div class="hcard-detail">1986 Fleer RC · #57</div></div><div class="hcard-price">$4,200</div></div></div>
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">QUARTERBACK</div><div class="hcard-num">15</div></div><div class="hcard-bot"><div><div class="hcard-grade">BGS 9.5</div><div class="hcard-name">P. Mahomes</div><div class="hcard-detail">2017 Prizm RC · #269</div></div><div class="hcard-price">$285</div></div></div>
-      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">GUARD</div><div class="hcard-num">30</div></div><div class="hcard-bot"><div><div class="hcard-grade">PSA 10</div><div class="hcard-name">Steph Curry</div><div class="hcard-detail">2015 Prizm · #73</div></div><div class="hcard-price">$340</div></div></div>
+    <div class="hero-card-display" id="hero-card-display">
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
+      <div class="hcard"><div class="hcard-top"><div class="hcard-pos">LOADING</div></div><div class="hcard-bot"><div><div class="hcard-name">—</div></div><div class="hcard-price"></div></div></div>
     </div>
   </div>
 </div>
@@ -877,6 +877,38 @@ function clearImage() {
   previewImage('');
 }
 
+// ===================== HERO CARDS =====================
+async function loadHeroCards() {
+  try {
+    const cards = await api('GET', '/api/cards');
+    const top3 = cards
+      .sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
+      .slice(0, 3);
+
+    const display = document.getElementById('hero-card-display');
+    if (!top3.length) { display.innerHTML = ''; return; }
+
+    display.innerHTML = top3.map((c, i) => `
+      <a href="${c.link}" target="_blank" class="hcard" style="text-decoration:none;">
+        <div class="hcard-top">
+          ${c.image
+            ? `<img src="${c.image}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+            : `<div class="hcard-pos">${c.sport.toUpperCase()}</div><div class="hcard-num">${initials(c.name)}</div>`
+          }
+        </div>
+        <div class="hcard-bot">
+          <div>
+            ${c.grade ? `<div class="hcard-grade">${c.grade}</div>` : ''}
+            <div class="hcard-name">${c.name}</div>
+            <div class="hcard-detail">${c.meta}</div>
+          </div>
+          <div class="hcard-price">$${c.price}</div>
+        </div>
+      </a>
+    `).join('');
+  } catch(e) { /* silently fail, hero just keeps placeholders */ }
+}
+
 // ===================== STATUS HELPERS =====================
 function showStatus(id, msg, type) {
   const el = document.getElementById(id);
@@ -894,6 +926,7 @@ function hideStatus(id) {
 // ===================== INIT =====================
 loadCards();
 loadEbayLinks();
+loadHeroCards();
 
 // Open admin if visiting /admin
 if (window.location.pathname === '/admin') { openAdmin(); }
