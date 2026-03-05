@@ -564,7 +564,7 @@ async function loadCards() {
       return;
     }
     grid.innerHTML = cards.map(c => `
-      <a href="${c.link}" target="_blank" class="card-item reveal">
+      <a href="${c.link}" target="_blank" class="card-item reveal" style="${c.sold ? 'pointer-events:none;' : ''}">
         <div class="card-img">
           <div class="card-img-inner">
             ${c.image
@@ -575,6 +575,7 @@ async function loadCards() {
                 </div>`
             }
           </div>
+          ${c.sold ? `<div style="position:absolute;inset:0;background:rgba(215,35,35,0.88);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;color:#fff;letter-spacing:4px;transform:rotate(-15deg);text-shadow:0 2px 8px rgba(0,0,0,0.3);">SOLD</span></div>` : ''}
           ${c.badge ? `<div class="badge-hot">${c.badge}</div>` : ''}
           ${c.grade ? `<div class="badge-grade">${c.grade}</div>` : ''}
         </div>
@@ -716,10 +717,11 @@ async function loadAdminListings() {
     list.innerHTML = cards.map(c => `
       <div class="acr">
         <div class="acr-info">
-          <div class="acr-name">${c.name}</div>
+          <div class="acr-name">${c.name} ${c.sold ? '<span style="background:var(--red);color:#fff;font-size:10px;padding:2px 7px;letter-spacing:1px;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;margin-left:6px;">SOLD</span>' : ''}</div>
           <div class="acr-meta">${c.sport} · ${c.meta}</div>
         </div>
         <div class="acr-price">$${c.price}</div>
+        <button class="aebtn" onclick="toggleSold('${c.id}', ${!!c.sold})">${c.sold ? 'Unmark' : 'Mark Sold'}</button>
         <button class="aebtn" onclick="editCard('${c.id}')">Edit</button>
         <button class="adbtn" onclick="deleteCard('${c.id}')">Delete</button>
       </div>
@@ -801,6 +803,15 @@ async function saveCard() {
   } finally {
     btn.disabled = false; btn.textContent = 'Save Card';
   }
+}
+
+async function toggleSold(id, currentlySold) {
+  try {
+    await api('PUT', `/api/cards?id=${id}`, { sold: !currentlySold });
+    await loadAdminListings();
+    await loadCards();
+    await loadHeroCards();
+  } catch(e) { alert('Failed to update card: ' + e.message); }
 }
 
 async function deleteCard(id) {
