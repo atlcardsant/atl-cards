@@ -199,28 +199,6 @@
   .sport-section-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;background:var(--off);color:var(--muted);border:1px solid var(--border);padding:4px 10px;}
   .sport-section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));border:2px solid var(--black);}
 
-  /* ===== LOTS & COLLECTIONS ===== */
-  .lots-section{background:var(--black);border-top:3px solid var(--black);border-bottom:3px solid var(--black);}
-  .lots-section .eyebrow{color:var(--red);}
-  .lots-section .eyebrow::before{background:var(--red);}
-  .lots-section .sec-title{color:var(--white);}
-  .lots-strip{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid rgba(255,255,255,.12);}
-  .lot-block{padding:48px 40px;border-right:2px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:20px;cursor:pointer;transition:background .2s;text-decoration:none;color:inherit;}
-  .lot-block:last-child{border-right:none;}
-  .lot-block:hover{background:var(--red);}
-  .lot-block:hover .lot-count{color:rgba(255,255,255,.8);}
-  .lot-block:hover .lot-arrow{opacity:1;color:var(--white);}
-  .lot-block:hover .lot-eyebrow{color:rgba(255,255,255,.6);}
-  .lot-emoji{font-size:44px;line-height:1;display:block;transition:transform .3s;}
-  .lot-block:hover .lot-emoji{transform:scale(1.2) rotate(-5deg);}
-  .lot-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--red);margin-bottom:4px;transition:color .2s;}
-  .lot-block:hover .lot-eyebrow{color:rgba(255,255,255,.7);}
-  .lot-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:34px;text-transform:uppercase;letter-spacing:1px;color:var(--white);line-height:1;}
-  .lot-desc{font-size:14px;color:rgba(255,255,255,.45);font-weight:300;line-height:1.5;}
-  .lot-count{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:auto;transition:color .2s;}
-  .lot-arrow{font-size:22px;color:rgba(255,255,255,.2);transition:color .2s,opacity .2s;}
-  .lot-count-badge{background:var(--red);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:3px 8px;display:inline-block;margin-left:8px;vertical-align:middle;}
-
   /* ===== ADMIN ===== */
   #admin-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(4px);}
   #admin-overlay.open{display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;}
@@ -300,8 +278,8 @@
   .admin-logout-btn:hover{border-color:var(--red);color:var(--red);}
   .admin-empty{padding:28px;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:2px;text-transform:uppercase;border:2px dashed var(--border);}
 
-  @media(max-width:1100px){.hero{grid-template-columns:1fr;min-height:auto;}.hero-right{display:none;}.hero-left::after{display:none;}.about-grid{grid-template-columns:1fr;gap:48px;}.signup-grid{grid-template-columns:1fr;gap:48px;}.cat-strip{grid-template-columns:repeat(3,1fr);}.footer-top{grid-template-columns:1fr 1fr;gap:40px;}.lots-strip{grid-template-columns:1fr 1fr;}.lots-strip .lot-block:nth-child(3){border-right:none;border-top:2px solid rgba(255,255,255,.12);grid-column:span 2;flex-direction:row;align-items:center;}}
-  @media(max-width:768px){nav{padding:0 24px;}.nav-links{display:none;}section{padding:64px 24px;}.hero-left{padding:64px 24px;}.hero-title{font-size:68px;}.listings-head{flex-direction:column;align-items:flex-start;gap:16px;}.cards-grid{grid-template-columns:1fr 1fr;}.sport-section-grid{grid-template-columns:1fr 1fr;}.sport-section-name{font-size:24px;}.cat-strip{grid-template-columns:1fr 1fr;}.reviews-grid{grid-template-columns:1fr;}.review-card{border-right:none;border-bottom:2px solid rgba(255,255,255,.07);}.frow2{grid-template-columns:1fr;}.footer-top{grid-template-columns:1fr;padding:40px 24px;}.footer-bot{flex-direction:column;gap:16px;padding:24px;text-align:center;}.aform-grid{grid-template-columns:1fr;}.aform-grid .afull{grid-column:span 1;}.alog-row{flex-direction:column;}.admin-overlay.open{padding:0;}.lots-strip{grid-template-columns:1fr;}.lots-strip .lot-block{border-right:none;border-bottom:2px solid rgba(255,255,255,.12);grid-column:auto!important;flex-direction:row;align-items:center;padding:28px 24px;gap:16px;}.lots-strip .lot-block:last-child{border-bottom:none;}.lot-block .lot-desc{display:none;}}
+  @media(max-width:1100px){.hero{grid-template-columns:1fr;min-height:auto;}.hero-right{display:none;}.hero-left::after{display:none;}.about-grid{grid-template-columns:1fr;gap:48px;}.signup-grid{grid-template-columns:1fr;gap:48px;}.cat-strip{grid-template-columns:repeat(3,1fr);}.footer-top{grid-template-columns:1fr 1fr;gap:40px;}}
+  @media(max-width:768px){nav{padding:0 24px;}.nav-links{display:none;}section{padding:64px 24px;}.hero-left{padding:64px 24px;}.hero-title{font-size:68px;}.listings-head{flex-direction:column;align-items:flex-start;gap:16px;}.cards-grid{grid-template-columns:1fr 1fr;}.sport-section-grid{grid-template-columns:1fr 1fr;}.sport-section-name{font-size:24px;}.cat-strip{grid-template-columns:1fr 1fr;}.reviews-grid{grid-template-columns:1fr;}.review-card{border-right:none;border-bottom:2px solid rgba(255,255,255,.07);}.frow2{grid-template-columns:1fr;}.footer-top{grid-template-columns:1fr;padding:40px 24px;}.footer-bot{flex-direction:column;gap:16px;padding:24px;text-align:center;}.aform-grid{grid-template-columns:1fr;}.aform-grid .afull{grid-column:span 1;}.alog-row{flex-direction:column;}.admin-overlay.open{padding:0;}}
 </style>
 </head>
 <body>
@@ -409,7 +387,6 @@
   <span class="nav-logo" id="nav-logo" title="Click 5× to open admin">ATL<span>Cards</span></span>
   <ul class="nav-links">
     <li><a href="#listings">Shop</a></li>
-    <li><a href="#lots">Lots</a></li>
     <li><a href="#cats">Sports</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#reviews">Reviews</a></li>
@@ -452,44 +429,6 @@
   <div id="sports-sections"><div class="no-listings">Loading listings…</div></div>
 </section>
 
-<!-- LOTS & COLLECTIONS -->
-<section class="lots-section" id="lots" style="padding:100px 60px;">
-  <div class="eyebrow">Lots &amp; Collections</div>
-  <h2 class="sec-title">Shop By<br>Collection</h2>
-  <div class="lots-strip">
-
-    <a class="lot-block" href="#sport-nba-lot">
-      <span class="lot-emoji">🏀</span>
-      <div>
-        <div class="lot-eyebrow">Multi-Card Bundles</div>
-        <div class="lot-title">NBA Lots</div>
-        <div class="lot-desc">Curated basketball lots — multiple cards, one great deal.</div>
-      </div>
-      <div class="lot-count" id="lot-count-nba">Browse NBA Lots →</div>
-    </a>
-
-    <a class="lot-block" href="#sport-nfl-lot">
-      <span class="lot-emoji">🏈</span>
-      <div>
-        <div class="lot-eyebrow">Multi-Card Bundles</div>
-        <div class="lot-title">NFL Lots</div>
-        <div class="lot-desc">Stack your PC with football lots hand-picked by the seller.</div>
-      </div>
-      <div class="lot-count" id="lot-count-nfl">Browse NFL Lots →</div>
-    </a>
-
-    <a class="lot-block" href="#sport-celebrity">
-      <span class="lot-emoji">⭐</span>
-      <div>
-        <div class="lot-eyebrow">Entertainment &amp; Pop Culture</div>
-        <div class="lot-title">Celebrity Cards</div>
-        <div class="lot-desc">Rare cards featuring entertainers, icons, and pop culture legends.</div>
-      </div>
-      <div class="lot-count" id="lot-count-celebrity">Browse Celebrity Cards →</div>
-    </a>
-
-  </div>
-</section>
 
 <div class="cat-wrap" id="cats">
   <div class="cat-strip">
@@ -671,6 +610,9 @@ function cardHTML(c) {
 
 async function loadCards() {
   const container = document.getElementById('sports-sections');
+  // These three always get a section on the page regardless of whether cards exist
+  const ALWAYS_SHOW = ['NBA Lot', 'NFL Lot', 'Celebrity'];
+
   try {
     const cards = await api('GET', '/api/cards');
 
@@ -681,23 +623,25 @@ async function loadCards() {
       bySport[key].push(c);
     });
 
-    const orderedKeys = SPORT_META.map(s => s.key).filter(k => bySport[k]);
+    // Ensure always-show keys exist (even if empty)
+    ALWAYS_SHOW.forEach(k => { if (!bySport[k]) bySport[k] = []; });
+
+    const orderedKeys = SPORT_META.map(s => s.key).filter(k => bySport[k] !== undefined);
     const extraKeys   = Object.keys(bySport).filter(k => !orderedKeys.includes(k));
     const allKeys     = [...orderedKeys, ...extraKeys];
 
-    if (!allKeys.length) {
-      container.innerHTML = '<div class="no-listings">No listings yet — check back soon!</div>';
-      return;
-    }
+    // Check if there are any non-always-show cards to decide on empty state
+    const hasRegularCards = allKeys.some(k => !ALWAYS_SHOW.includes(k) && bySport[k].length > 0);
+    const hasAnyCards     = cards.length > 0;
 
     container.innerHTML = allKeys.map(sport => {
       const meta    = SPORT_META.find(s => s.key === sport) || { emoji: '🃏' };
-      const top5    = bySport[sport]
-        .sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
-        .slice(0, 5);
-      const total   = bySport[sport].length;
-      const badge   = total > 5 ? `Top 5 of ${total}` : `${total} card${total !== 1 ? 's' : ''}`;
+      const items   = bySport[sport] || [];
+      const top5    = items.sort((a, b) => parseFloat(b.price) - parseFloat(a.price)).slice(0, 5);
+      const total   = items.length;
+      const badge   = total > 5 ? `Top 5 of ${total}` : total > 0 ? `${total} card${total !== 1 ? 's' : ''}` : 'Coming Soon';
       const secId   = 'sport-' + sport.toLowerCase().replace(/\s+/g, '-');
+      const emptyMsg = sport === 'Celebrity' ? 'Celebrity cards coming soon — check back!' : `${sport} lots coming soon — check back!`;
 
       return `
         <div class="sport-section" id="${secId}">
@@ -709,21 +653,14 @@ async function loadCards() {
             </div>
           </div>
           <div class="sport-section-grid">
-            ${top5.map(cardHTML).join('')}
+            ${top5.length ? top5.map(cardHTML).join('') : `<div class="no-listings" style="font-size:15px;padding:40px;">${emptyMsg}</div>`}
           </div>
         </div>`;
     }).join('');
 
-    // Update live counts in the Lots & Collections section
-    const nbaCount = (bySport['NBA Lot']   || []).length;
-    const nflCount = (bySport['NFL Lot']   || []).length;
-    const celCount = (bySport['Celebrity'] || []).length;
-    const nbaEl = document.getElementById('lot-count-nba');
-    const nflEl = document.getElementById('lot-count-nfl');
-    const celEl = document.getElementById('lot-count-celebrity');
-    if (nbaEl) nbaEl.textContent = nbaCount > 0 ? `${nbaCount} lot${nbaCount !== 1 ? 's' : ''} available →` : 'Browse NBA Lots →';
-    if (nflEl) nflEl.textContent = nflCount > 0 ? `${nflCount} lot${nflCount !== 1 ? 's' : ''} available →` : 'Browse NFL Lots →';
-    if (celEl) celEl.textContent = celCount > 0 ? `${celCount} card${celCount !== 1 ? 's' : ''} available →` : 'Browse Celebrity Cards →';
+    if (!hasAnyCards && !ALWAYS_SHOW.some(k => bySport[k].length)) {
+      // Only show global empty state if truly nothing at all
+    }
 
     document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   } catch(e) {
